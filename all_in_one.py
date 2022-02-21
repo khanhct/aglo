@@ -58,7 +58,7 @@ def pair(k, arr):
     return count
 
 
-##  String
+## String
 def is_p(s):
     i, j = 0, len(s) - 1
     while i < j:
@@ -94,16 +94,50 @@ def expand(s, i, j):
     return s[i + 1: j]
 
 
-def countInversions(arr):
-    pass
+def bubble_sort(nums):
+    # We set swapped to True so the loop looks runs at least once
+    swapped = True
+    while swapped:
+        swapped = False
+        for i in range(len(nums) - 1):
+            if nums[i] > nums[i + 1]:
+                # Swap the elements
+                nums[i], nums[i + 1] = nums[i + 1], nums[i]
+                # Set the flag to True so we'll loop again
+                swapped = True
+
+
+def selection_sort(arr):
+    s = len(arr)
+    for i in range(s):
+        lowest_idx = i
+        for j in range(i + 1, s):
+            if arr[j] < arr[i]:
+                lowest_idx = j
+        arr[i], arr[lowest_idx] = arr[lowest_idx], arr[i]
+
+
+def insertion_sort(nums):
+    # Start on the second element as we assume the first element is sorted
+    for i in range(1, len(nums)):
+        item_to_insert = nums[i]
+        # And keep a reference of the index of the previous element
+        j = i - 1
+        # Move all items of the sorted segment forward if they are larger than
+        # the item to insert
+        while j >= 0 and nums[j] > item_to_insert:
+            nums[j + 1] = nums[j]
+            j -= 1
+        # Insert the item
+        nums[j + 1] = item_to_insert
 
 
 def quick_sort(arr, l, r):
     if l < r:
         lo, ro = l, r
-        lo, ro = partition(arr, lo, ro)
-        quick_sort(arr, l, lo)
-        quick_sort(arr, ro, r)
+        l1 = partition(arr, lo, ro)
+        quick_sort(arr, l, l1)
+        quick_sort(arr, l1 + 1, r)
 
 
 def partition(arr, lo, ro):
@@ -111,8 +145,7 @@ def partition(arr, lo, ro):
     if l >= r:
         return
 
-    pivot = arr[r]
-    r -= 1
+    pivot = arr[(l+r)//2]
     while l <= r:
         while arr[l] < pivot and l <= r:
             l += 1
@@ -127,11 +160,7 @@ def partition(arr, lo, ro):
         l += 1
         r -= 1
 
-    return l, r
-
-
-def insertion_sort(arr):
-    pass
+    return l
 
 
 ## Example
@@ -144,7 +173,7 @@ def insertion_sort(arr):
 # nums.sort()
 # print(kSum(nums, 0, 3))
 
-# Palindrone
+# Palindronearr
 # print(longest_palindrome('bacabd'))
 
 # ## PAIR
@@ -154,6 +183,8 @@ def insertion_sort(arr):
 # print(pair(2, arr))
 
 ## Sort
-arr = [2, 4, 1]
-print(quick_sort(arr, 0, len(arr) - 1))
+arr = [22, 5, 1, 18, 99, 0]
+# quick_sort(arr, 0, len(arr) - 1)
+selection_sort(arr)
+print(arr)
 # print(insertion_sort(arr))
