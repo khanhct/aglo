@@ -188,3 +188,270 @@ arr = [22, 5, 1, 18, 99, 0]
 selection_sort(arr)
 print(arr)
 # print(insertion_sort(arr))
+
+
+
+def bubble_soft(arr):
+    s = len(arr)
+    for i in range(s):
+        for j in range(i + 1, s):
+            if arr[j] < arr[i]:
+                arr[i], arr[j] = arr[j], arr[i]
+
+
+def selection_sort(arr):
+    s = len(arr)
+    for i in range(s):
+        min_idx = i
+        for j in range(i + 1, s):
+            if arr[j] < arr[i]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+
+
+def insertion_sort(arr):
+    s = len(arr)
+    for i in range(1, s):
+        insert_num = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > insert_num:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = insert_num
+
+
+def quick_sort(arr, l, r):
+    if l >= r:
+        return
+
+    def partition(lo, ro):
+        pivot = arr[(lo + ro)//2]
+
+        while lo <= ro:
+            while arr[lo] < pivot and lo <= ro:
+                lo += 1
+
+            while arr[ro] > pivot and ro >= lo:
+                ro -= 1
+
+            if lo <= ro:
+                arr[lo], arr[ro] = arr[ro], arr[lo]
+                ro -= 1
+                lo += 1
+
+        return lo - 1
+
+    mid = partition(l, r)
+    quick_sort(arr, l, mid)
+    quick_sort(arr, mid + 1, r)
+
+#
+# arr = [1, 3, 3, 2, 5, 0]
+# quick_sort(arr, 0, len(arr) - 1)
+#
+# print(arr)
+
+
+def isolated_area(arr):
+    total = 0
+    for i in range(len(arr)):
+        for j in  range(len(arr[0])):
+            if arr[i][j] == 1:
+                dfs(arr, (i, j))
+                total += 1
+
+    return total
+
+
+def dfs(arr, p):
+    stack = [p]
+
+    while not stack:
+        i, j = stack.pop()
+        arr[i][j] = 2
+
+        if arr[i - 1] == 0:
+            stack.insert(0, (i, j))
+
+
+def int_para(val):
+    num_arr = []
+    while val > 0:
+        mod = val%10
+        num_arr.insert(0, mod)
+        val = val//10
+
+    def is_p():
+        l, r = 0, len(num_arr) - 1
+        while l <= r:
+            if num_arr[l] != num_arr[r]:
+                return False
+            l += 1
+            r -= 1
+        return True
+
+    return is_p()
+
+# def expand(arr, i, j):
+#     while arr[i] == arr[j]:
+
+# print(int_para(124521))
+
+# [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]
+
+
+def word_search(board, word):
+    visited = set()
+    for i in range(len(board)):
+        for j in range(len(board[0])):
+            if board[i][j] == word[0]:
+                if dfs(board, visited, (i, j), word, 1):
+                    return True
+    return False
+
+
+def dfs(board, visited, p, word, idx):
+    s1 = len(board) - 1
+    s2 = len(board[0]) - 1
+    i, j = p
+    # visited.add((i, j))
+    if idx >= len(word):
+        return True
+
+    if i + 1 <= s1 and (i+1, j) not in visited and board[i+1][j] == word[idx]:
+        if dfs(board, visited, (i+1, j), word, idx + 1):
+            return True
+
+    if i - 1 >= 0 and (i-1, j) not in visited and board[i-1][j] == word[idx]:
+        if dfs(board, visited, (i-1, j), word, idx + 1):
+            return True
+
+    if j + 1 <= s2 and (i, j + 1) not in visited and board[i][j + 1] == word[idx]:
+        if dfs(board, visited, (i, j + 1), word, idx + 1):
+            return True
+
+    if j - 1 >= 0 and (i, j - 1) not in visited and board[i][j - 1] == word[idx]:
+        if dfs(board, visited, (i, j - 1), word, idx + 1):
+            return True
+
+
+class Solution(object):
+    def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+        visited = set()
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if board[i][j] == word[0]:
+                    if self.dfs(board, visited, (i, j), word, 1):
+                        return True
+        return False
+
+    def dfs(self, board, visited, p, word, idx):
+        s1 = len(board) - 1
+        s2 = len(board[0]) - 1
+        i, j = p
+        # visited.add((i, j))
+        tmp = board[i][j]
+        board[i][j] = '#'
+        if idx >= len(word):
+            return True
+
+        if i + 1 <= s1 and (i + 1, j) not in visited and board[i + 1][j] == word[idx]:
+            if self.dfs(board, visited, (i + 1, j), word, idx + 1):
+                return True
+
+        if i - 1 >= 0 and (i - 1, j) not in visited and board[i - 1][j] == word[idx]:
+            if self.dfs(board, visited, (i - 1, j), word, idx + 1):
+                return True
+
+        if j + 1 <= s2 and (i, j + 1) not in visited and board[i][j + 1] == word[idx]:
+            if self.dfs(board, visited, (i, j + 1), word, idx + 1):
+                return True
+
+        if j - 1 >= 0 and (i, j - 1) not in visited and board[i][j - 1] == word[idx]:
+            if self.dfs(board, visited, (i, j - 1), word, idx + 1):
+                return True
+        board[i][j] = tmp
+
+# board = [["C","A","A"],
+#          ["A","A","A"],
+#          ["B","C","D"]]
+
+board = [["A","B","C","E"],
+         ["S","F","E","S"],
+         ["A","D","E","E"]]
+word = "ABCESEEEFS"
+# sol = Solution()
+# print(sol.exist(board, word))
+
+
+class Solution:
+    def setZeroes(self, matrix) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        visited = set()
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                if matrix[i][j] == 0 and (i, j) not in visited:
+                    visited.add((i, j))
+                    self.draw(matrix, visited, i, j)
+
+    def draw(self, matrix, visited, i, j):
+        s1 = len(matrix) - 1
+        s2 = len(matrix[0]) - 1
+        while s1 >= 0:
+            if matrix[s1][j] != 0:
+                visited.add((s1, j))
+            matrix[s1][j] = 0
+            s1 -= 1
+
+        while s2 >= 0:
+            if matrix[i][s2] != 0:
+                visited.add((i, s2))
+            matrix[i][s2] = 0
+            s2 -= 1
+
+
+# matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
+#
+# sol = Solution()
+# print(sol.setZeroes(matrix))
+# print(matrix)
+
+
+class Solution:
+    def num_decodings(self, s) -> int:
+        total = 0
+        self.ds(s, total)
+        return total
+
+    def ds(self, s, total):
+        sz = len(s)
+        i = 0
+        while i < sz:
+            if int(s[i]) <= 2:
+                total += 1
+                if i + 1 >= sz:
+                    break
+                self.ds(s[i + 1:], total)
+                if i + 1 < sz and int(s[i + 1]) <= 6:
+                    total += 1
+                    if i + 2 >= sz:
+                        break
+                    self.ds(s[i + 2:], total)
+            else:
+                total += 1
+                if i + 1 >= sz:
+                    break
+                self.ds(s[i + 1:], total)
+
+
+
+s = "226"
+sol = Solution()
+print(sol.num_decodings(s))
